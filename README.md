@@ -1,13 +1,26 @@
-# ChatGPT Download Helper for Firefox
+# ChatGPT Download Helper
 
-A lightweight Firefox extension that captures ChatGPT-generated file `download_url` values from network responses so you can open or copy the real file URL when normal downloads fail.
+<div align="center">
 
-## Why this exists
+![Platform](https://img.shields.io/badge/platform-Firefox%20%7C%20Chrome-blue)
+![Type](https://img.shields.io/badge/type-WebExtension-green)
+![Status](https://img.shields.io/badge/status-Local%20Use-orange)
 
-Sometimes ChatGPT file downloads fail in the browser even though the file was generated successfully.  
-This extension helps by watching the page’s network activity, detecting the JSON response that contains `download_url`, and surfacing that URL in the extension popup.
+A lightweight browser extension that captures ChatGPT-generated file `download_url` values from network responses so you can open the real file URL when normal downloads fail.
 
-## Features
+</div>
+
+---
+
+## ✨ Why this exists
+
+Sometimes ChatGPT file downloads fail in the browser even though the file was generated successfully.
+
+This extension helps by watching the page’s network activity, detecting the JSON response that contains `download_url`, and surfacing that URL in the extension popup so you can copy or open the real file link.
+
+---
+
+## 🚀 Features
 
 - Captures ChatGPT file `download_url` values
 - Works on `chatgpt.com`
@@ -15,9 +28,13 @@ This extension helps by watching the page’s network activity, detecting the JS
   - View the latest captured URL
   - Copy the URL
   - Open the URL in a new tab
+  - Refresh the latest captured value
 - Uses page-script injection so it can observe the page’s real `fetch` and `XMLHttpRequest` traffic
+- Useful when normal ChatGPT file downloads fail or stall
 
-## How it works
+---
+
+## 🧠 How it works
 
 ChatGPT file downloads often happen in two steps:
 
@@ -31,10 +48,12 @@ ChatGPT file downloads often happen in two steps:
 
 This extension captures that `download_url` and stores the latest one so you can access it from the popup.
 
-## Project structure
+---
+
+## 📁 Project structure
 
 ```text
-chatgpt_download_helper_firefox/
+chatgpt_download_helper/
 ├── manifest.json
 ├── content.js
 ├── injected.js
@@ -46,7 +65,7 @@ chatgpt_download_helper_firefox/
 ### File overview
 
 - `manifest.json`  
-  Defines the extension, permissions, popup, content script, and Firefox compatibility settings.
+  Defines the extension, permissions, popup, content script, and browser compatibility settings.
 
 - `content.js`  
   Runs on the ChatGPT page. Injects the page-level script and listens for captured URLs sent back from the page.
@@ -60,7 +79,11 @@ chatgpt_download_helper_firefox/
 - `popup.js`  
   Loads the saved URL into the popup and handles Copy / Open / Refresh actions.
 
-## Installation
+---
+
+## 🛠 Installation
+
+## Firefox
 
 ### Temporary install in Firefox
 
@@ -82,7 +105,30 @@ If you packaged the extension as an `.xpi` file:
 4. Choose **Install Add-on From File...**
 5. Select the `.xpi` file
 
-## Usage
+---
+
+## Chrome
+
+### Load unpacked in Chrome
+
+1. Download or extract the Chrome extension folder
+2. Open Chrome
+3. Go to `chrome://extensions`
+4. Turn on **Developer mode** in the top-right corner
+5. Click **Load unpacked**
+6. Select the extracted extension folder
+7. The extension should now appear in your extensions list
+8. Pin it to the toolbar if you want quicker access
+
+### Update the extension after changes
+
+1. Open `chrome://extensions`
+2. Make sure **Developer mode** is still enabled
+3. Click the **Reload** button on the extension card
+
+---
+
+## ▶️ Usage
 
 1. Open `https://chatgpt.com`
 2. Generate or locate a downloadable file in ChatGPT
@@ -94,7 +140,9 @@ If you packaged the extension as an `.xpi` file:
    - **Open URL** to open the real file link in a new tab
    - **Refresh** to reload the latest saved value in the popup
 
-## Permissions
+---
+
+## 🔐 Permissions
 
 ### `storage`
 Used to save the latest captured `download_url` so the popup can read it.
@@ -105,11 +153,14 @@ Used so the popup can open the captured URL in a new browser tab.
 ### Host permission: `https://chatgpt.com/*`
 Required so the extension can run on ChatGPT pages and observe download-related network responses there.
 
-## Technical details
+---
+
+## ⚙️ Technical details
 
 ### Why `content.js` alone is not enough
 
-Browser extensions run content scripts in an isolated world.  
+Browser extensions run content scripts in an isolated world.
+
 That means overriding `window.fetch` or `XMLHttpRequest` directly inside a content script often does **not** affect the page’s real JavaScript environment.
 
 To solve that, this extension:
@@ -132,16 +183,21 @@ The script tries two approaches:
 
 This makes detection more resilient if the response formatting changes slightly.
 
-## Limitations
+---
+
+## ⚠️ Limitations
 
 - The captured URL may expire quickly
 - If ChatGPT changes its internal response format, the extension may need updates
 - The extension only stores the most recent captured URL
 - It depends on ChatGPT returning a response that contains `download_url`
 
-## Troubleshooting
+---
+
+## 🧯 Troubleshooting
 
 ### Popup says “No download URL captured yet”
+
 Possible causes:
 
 - You did not click a ChatGPT file download yet
@@ -156,6 +212,7 @@ Try:
 4. Check the browser console for logs
 
 ### The captured link does not work
+
 Possible causes:
 
 - The `download_url` expired
@@ -165,43 +222,60 @@ Possible causes:
 Try again with a newly generated file.
 
 ### The extension loads but still captures nothing
+
 Try:
 1. Remove the old extension version
 2. Reinstall the new version
 3. Refresh ChatGPT completely
 4. Retry the download immediately
 
-## Security notes
+---
+
+## 🔒 Security notes
 
 - Do not share session tokens, cookies, or authorization headers
 - This extension is intended for your own local browser use
 - It only captures download URLs on ChatGPT pages
 - Review the source code before installing if you plan to distribute it
 
-## Development
+---
+
+## 🧪 Development
 
 ### Edit the extension
+
 Modify:
 - `injected.js` for network capture logic
 - `content.js` for storage and page-to-extension messaging
 - `popup.html` and `popup.js` for popup UI behavior
 
 ### Reload after changes
-In Firefox temporary add-on mode:
+
+#### Firefox
 1. Go back to `about:debugging#/runtime/this-firefox`
 2. Click **Reload** on the extension
 
-## Roadmap
+#### Chrome
+1. Open `chrome://extensions`
+2. Click **Reload** on the extension card
+
+---
+
+## 🗺 Roadmap
 
 - Add on-page “Copy latest download URL” button
 - Add history of recently captured URLs
 - Add better filtering so only ChatGPT file-download responses are captured
 - Add export/debug mode for troubleshooting
 
-## Disclaimer
+---
+
+## 📌 Disclaimer
 
 This project is an unofficial utility for personal troubleshooting and is not affiliated with or endorsed by OpenAI.
 
-## License
+---
+
+## 📜 License
 
 MIT
