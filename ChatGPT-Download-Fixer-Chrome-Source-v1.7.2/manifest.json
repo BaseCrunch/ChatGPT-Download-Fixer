@@ -1,0 +1,42 @@
+{
+  "manifest_version": 3,
+  "name": "ChatGPT Download Helper v1.7.2",
+  "version": "1.7.2",
+  "description": "Captures ChatGPT download URLs and auto-downloads them.",
+  "permissions": [
+    "storage",
+    "tabs",
+    "downloads"
+  ],
+  "host_permissions": [
+    "https://chatgpt.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chatgpt.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "injected.js"
+      ],
+      "matches": [
+        "https://chatgpt.com/*"
+      ]
+    }
+  ],
+  "action": {
+    "default_title": "ChatGPT Download Helper v1.7.2",
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  }
+}
